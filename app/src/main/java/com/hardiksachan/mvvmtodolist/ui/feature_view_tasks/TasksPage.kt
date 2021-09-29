@@ -1,4 +1,4 @@
-package com.hardiksachan.mvvmtodolist.ui.viewtasks
+package com.hardiksachan.mvvmtodolist.ui.feature_view_tasks
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,17 +11,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hardiksachan.mvvmtodolist.R
 import com.hardiksachan.mvvmtodolist.domain.entity.Task
-import com.hardiksachan.mvvmtodolist.ui.viewtasks.components.TaskItem
+import com.hardiksachan.mvvmtodolist.ui.feature_view_tasks.components.TaskItem
 import com.hardiksachan.mvvmtodolist.ui.theme.AppTheme
 
 @Composable
 fun TasksPage(
-    tasks: List<Task>
+    tasks: List<Task>,
+    onAddButtonClicked: () -> Unit
 ) {
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(onClick = { onAddButtonClicked() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_add),
                     contentDescription = "Add Icon",
@@ -60,7 +61,8 @@ fun TasksPagePreview() {
 
     AppTheme {
         TasksPage(
-            tasks = tasks
+            tasks = tasks,
+            onAddButtonClicked = {}
         )
     }
 }

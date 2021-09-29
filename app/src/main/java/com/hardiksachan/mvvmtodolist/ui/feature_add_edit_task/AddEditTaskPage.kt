@@ -1,4 +1,4 @@
-package com.hardiksachan.mvvmtodolist.ui.addedittask
+package com.hardiksachan.mvvmtodolist.ui.feature_add_edit_task
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -9,22 +9,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hardiksachan.mvvmtodolist.R
-import com.hardiksachan.mvvmtodolist.ui.addedittask.components.CreatedLabel
-import com.hardiksachan.mvvmtodolist.ui.addedittask.components.ImportantTaskCheckbox
-import com.hardiksachan.mvvmtodolist.ui.addedittask.components.TaskNameTextField
+import com.hardiksachan.mvvmtodolist.ui.feature_add_edit_task.components.CreatedLabel
+import com.hardiksachan.mvvmtodolist.ui.feature_add_edit_task.components.ImportantTaskCheckbox
+import com.hardiksachan.mvvmtodolist.ui.feature_add_edit_task.components.TaskNameTextField
 import com.hardiksachan.mvvmtodolist.ui.theme.AppTheme
 
 @Composable
 fun AddEditTask(
-    appBarTitle: String = "Add Task",
-    taskName: String = "",
-    isImportant: Boolean = false,
-    createdOn: String = ""
+    appBarTitle: String,
+    taskName: String,
+    isImportant: Boolean,
+    createdOn: String,
+    onSubmit: () -> Unit,
+    onTaskNameChanged: (String) -> Unit,
+    onCheckedChange: (Boolean) -> Unit
 ) {
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(onClick = { onSubmit() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_check_mark),
                     contentDescription = "Save Icon",
@@ -51,12 +54,12 @@ fun AddEditTask(
         ) {
             TaskNameTextField(
                 taskName = taskName,
-                onTaskNameChanged = { /* TODO */ }
+                onTaskNameChanged = onTaskNameChanged
             )
             Spacer(modifier = Modifier.height(16.dp))
             ImportantTaskCheckbox(
                 checked = isImportant,
-                onCheckedChange = { /* TODO */ }
+                onCheckedChange = onCheckedChange
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -72,7 +75,15 @@ fun AddEditTask(
 @Composable
 fun AddPagePreview() {
     AppTheme {
-        AddEditTask()
+        AddEditTask(
+            appBarTitle = "Add Task",
+            taskName = "",
+            isImportant = false,
+            createdOn = "",
+            onCheckedChange = {},
+            onSubmit = {},
+            onTaskNameChanged = {}
+        )
     }
 }
 
@@ -83,7 +94,11 @@ fun EditPagePreview() {
         AddEditTask(
             appBarTitle = "Edit Task",
             taskName = "Do something",
-            createdOn = "Nov 11, 2020 9:44:38 AM"
+            createdOn = "Nov 11, 2020 9:44:38 AM",
+            isImportant = false,
+            onSubmit = {},
+            onCheckedChange = {},
+            onTaskNameChanged = {}
         )
     }
 }

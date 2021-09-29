@@ -1,4 +1,4 @@
-package com.hardiksachan.mvvmtodolist.ui.addedittask.components
+package com.hardiksachan.mvvmtodolist.ui.feature_add_edit_task.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

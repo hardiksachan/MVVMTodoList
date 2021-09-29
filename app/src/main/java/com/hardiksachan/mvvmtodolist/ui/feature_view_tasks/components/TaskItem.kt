@@ -1,4 +1,4 @@
-package com.hardiksachan.mvvmtodolist.ui.viewtasks.components
+package com.hardiksachan.mvvmtodolist.ui.feature_view_tasks.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Checkbox
@@ -10,11 +10,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.hardiksachan.mvvmtodolist.domain.entity.Task
 import com.hardiksachan.mvvmtodolist.R
+import com.hardiksachan.mvvmtodolist.domain.entity.Task
 import com.hardiksachan.mvvmtodolist.ui.theme.AppTheme
 
 @Composable
@@ -34,7 +35,8 @@ fun TaskItem(
             text = task.name,
             modifier = Modifier.weight(1f),
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            textDecoration = if (task.completed) TextDecoration.LineThrough else null
         )
         Spacer(modifier = Modifier.width(8.dp))
         if (task.important) {
