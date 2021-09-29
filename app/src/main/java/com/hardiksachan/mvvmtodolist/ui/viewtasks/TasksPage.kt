@@ -1,4 +1,4 @@
-package com.hardiksachan.mvvmtodolist.ui.tasks
+package com.hardiksachan.mvvmtodolist.ui.viewtasks
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,7 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hardiksachan.mvvmtodolist.R
 import com.hardiksachan.mvvmtodolist.domain.entity.Task
-import com.hardiksachan.mvvmtodolist.ui.tasks.components.TaskItem
+import com.hardiksachan.mvvmtodolist.ui.viewtasks.components.TaskItem
 import com.hardiksachan.mvvmtodolist.ui.theme.AppTheme
 
 @Composable
