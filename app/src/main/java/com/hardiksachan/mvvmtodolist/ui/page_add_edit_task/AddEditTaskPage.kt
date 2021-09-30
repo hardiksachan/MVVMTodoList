@@ -1,4 +1,4 @@
-package com.hardiksachan.mvvmtodolist.ui.feature_add_edit_task
+package com.hardiksachan.mvvmtodolist.ui.page_add_edit_task
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -9,13 +9,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hardiksachan.mvvmtodolist.R
-import com.hardiksachan.mvvmtodolist.ui.feature_add_edit_task.components.CreatedLabel
-import com.hardiksachan.mvvmtodolist.ui.feature_add_edit_task.components.ImportantTaskCheckbox
-import com.hardiksachan.mvvmtodolist.ui.feature_add_edit_task.components.TaskNameTextField
+import com.hardiksachan.mvvmtodolist.ui.page_add_edit_task.components.CreatedLabel
+import com.hardiksachan.mvvmtodolist.ui.page_add_edit_task.components.ImportantTaskCheckbox
+import com.hardiksachan.mvvmtodolist.ui.page_add_edit_task.components.TaskNameTextField
 import com.hardiksachan.mvvmtodolist.ui.theme.AppTheme
 
 @Composable
-fun AddEditTask(
+fun AddEditTaskPage(
     appBarTitle: String,
     taskName: String,
     isImportant: Boolean,
@@ -75,7 +75,7 @@ fun AddEditTask(
 @Composable
 fun AddPagePreview() {
     AppTheme {
-        AddEditTask(
+        AddEditTaskPage(
             appBarTitle = "Add Task",
             taskName = "",
             isImportant = false,
@@ -91,7 +91,7 @@ fun AddPagePreview() {
 @Composable
 fun EditPagePreview() {
     AppTheme {
-        AddEditTask(
+        AddEditTaskPage(
             appBarTitle = "Edit Task",
             taskName = "Do something",
             createdOn = "Nov 11, 2020 9:44:38 AM",

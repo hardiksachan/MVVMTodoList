@@ -1,4 +1,4 @@
-package com.hardiksachan.mvvmtodolist.ui.feature_add_edit_task.components
+package com.hardiksachan.mvvmtodolist.ui.page_add_edit_task.components
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text

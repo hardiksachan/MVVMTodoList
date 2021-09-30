@@ -1,4 +1,4 @@
-package com.hardiksachan.mvvmtodolist.ui.feature_view_tasks.components
+package com.hardiksachan.mvvmtodolist.ui.page_view_tasks.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Checkbox

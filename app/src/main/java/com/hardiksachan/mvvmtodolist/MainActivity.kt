@@ -3,11 +3,10 @@ package com.hardiksachan.mvvmtodolist
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.remember
+import androidx.navigation.compose.rememberNavController
+import com.hardiksachan.mvvmtodolist.ui.nav.NavigationComponent
+import com.hardiksachan.mvvmtodolist.ui.nav.Navigator
 import com.hardiksachan.mvvmtodolist.ui.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
@@ -16,24 +15,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    Greeting("Android")
+                val navController = rememberNavController()
+                val navigator = remember {
+                    Navigator()
                 }
+                NavigationComponent(navController = navController, navigator = navigator)
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    AppTheme {
-        Greeting("Android")
     }
 }
