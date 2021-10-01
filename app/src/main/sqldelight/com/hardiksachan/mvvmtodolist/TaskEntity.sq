@@ -1,0 +1,32 @@
+CREATE TABLE task (
+    id TEXT NOT NULL UNIQUE PRIMARY KEY,
+    name TEXT NOT NULL,
+    important INTEGER AS Boolean NOT NULL,
+    completed INTEGER AS Boolean NOT NULL,
+    created INTEGER AS Long NOT NULL
+);
+
+selectAll:
+SELECT *
+FROM task
+ORDER BY created DESC;
+
+selectById:
+SELECT *
+FROM task
+WHERE id = ?;
+
+insertOrReplace:
+INSERT OR REPLACE INTO task(
+    id,
+    name,
+    important,
+    completed,
+    created
+)
+VALUES (?, ?, ?, ?, ?);
+
+deleteById:
+DELETE
+FROM task
+WHERE id = ?;
