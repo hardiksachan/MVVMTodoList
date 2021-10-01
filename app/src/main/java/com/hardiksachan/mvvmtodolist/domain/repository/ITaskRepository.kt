@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ITaskRepository {
 
-    fun getAllTasks(): Flow<List<Task>>
+    fun getAllTasks(): Flow<ResultWrapper<Exception, List<Task>>>
 
     suspend fun getTaskWithId(id: String): ResultWrapper<Exception, Task>
 
