@@ -1,4 +1,4 @@
-CREATE TABLE task (
+CREATE TABLE TaskEntity (
     id TEXT NOT NULL UNIQUE PRIMARY KEY,
     name TEXT NOT NULL,
     important INTEGER AS Boolean NOT NULL,
@@ -8,16 +8,16 @@ CREATE TABLE task (
 
 selectAll:
 SELECT *
-FROM task
+FROM TaskEntity
 ORDER BY created DESC;
 
 selectById:
 SELECT *
-FROM task
+FROM TaskEntity
 WHERE id = ?;
 
 insertOrReplace:
-INSERT OR REPLACE INTO task(
+INSERT OR REPLACE INTO TaskEntity(
     id,
     name,
     important,
@@ -28,5 +28,5 @@ VALUES (?, ?, ?, ?, ?);
 
 deleteById:
 DELETE
-FROM task
+FROM TaskEntity
 WHERE id = ?;

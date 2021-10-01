@@ -89,6 +89,7 @@ dependencies {
     // SQLDelight
     implementation "com.squareup.sqldelight:android-driver:$sqlDelightVersion"
     testImplementation "com.squareup.sqldelight:sqlite-driver:$sqlDelightVersion"
+    implementation "com.squareup.sqldelight:coroutines-extensions-jvm:$sqlDelightVersion"
 
     // JUnit5
     testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"
