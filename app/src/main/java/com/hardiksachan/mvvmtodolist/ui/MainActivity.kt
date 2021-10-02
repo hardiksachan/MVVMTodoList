@@ -1,4 +1,4 @@
-package com.hardiksachan.mvvmtodolist
+package com.hardiksachan.mvvmtodolist.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -8,7 +8,9 @@ import androidx.navigation.compose.rememberNavController
 import com.hardiksachan.mvvmtodolist.ui.nav.NavigationComponent
 import com.hardiksachan.mvvmtodolist.ui.nav.Navigator
 import com.hardiksachan.mvvmtodolist.ui.theme.AppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
