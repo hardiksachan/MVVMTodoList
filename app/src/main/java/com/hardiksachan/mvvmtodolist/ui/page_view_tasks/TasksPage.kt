@@ -1,14 +1,15 @@
 package com.hardiksachan.mvvmtodolist.ui.page_view_tasks
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material.FabPosition
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.hardiksachan.mvvmtodolist.R
 import com.hardiksachan.mvvmtodolist.domain.entity.Task
 import com.hardiksachan.mvvmtodolist.ui.page_view_tasks.components.TaskItem
@@ -32,11 +33,7 @@ fun TasksPage(
         },
         floatingActionButtonPosition = FabPosition.End,
         topBar = {
-            TopAppBar(
-                contentPadding = PaddingValues(horizontal = 16.dp)
-            ) {
-                Text(text = "Tasks", style = MaterialTheme.typography.h6)
-            }
+
         }
     ) {
         LazyColumn {
