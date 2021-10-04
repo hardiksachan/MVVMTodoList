@@ -2,6 +2,8 @@ package com.hardiksachan.mvvmtodolist.ui.nav
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,9 +29,20 @@ fun NavigationComponent(
     ) {
         composable(NavTargets.viewTasks.destination) {
             // TODO: hook up viewModel
-            TasksPage(tasks = listOf()) {
-                navigator.navigateTo(NavTargets.AddEditTask.addTask) // TODO: remove
+
+
+            val (search, searchChanged) = remember {
+                mutableStateOf("")
             }
+
+            TasksPage(
+                tasks = listOf(),
+                searchDisplay = search,
+                onSearchDisplayChanged = searchChanged,
+                onAddButtonClicked = {
+                    navigator.navigateTo(NavTargets.AddEditTask.addTask) // TODO: remove
+                }
+            )
         }
 
         composable(NavTargets.AddEditTask.route) { entry ->

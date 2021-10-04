@@ -13,12 +13,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.hardiksachan.mvvmtodolist.R
 import com.hardiksachan.mvvmtodolist.domain.entity.Task
 import com.hardiksachan.mvvmtodolist.ui.page_view_tasks.components.TaskItem
+import com.hardiksachan.mvvmtodolist.ui.page_view_tasks.components.TasksHeader
 import com.hardiksachan.mvvmtodolist.ui.theme.AppTheme
 
 @Composable
 fun TasksPage(
     tasks: List<Task>,
-    onAddButtonClicked: () -> Unit
+    onAddButtonClicked: () -> Unit,
+    searchDisplay: String,
+    onSearchDisplayChanged: (String) -> Unit
 ) {
 
     Scaffold(
@@ -33,7 +36,10 @@ fun TasksPage(
         },
         floatingActionButtonPosition = FabPosition.End,
         topBar = {
-
+            TasksHeader(
+                searchDisplay = searchDisplay,
+                onSearchDisplayChanged = onSearchDisplayChanged
+            )
         }
     ) {
         LazyColumn {
@@ -56,10 +62,14 @@ fun TasksPagePreview() {
         )
     }
 
+
+
     AppTheme {
         TasksPage(
             tasks = tasks,
-            onAddButtonClicked = {}
+            onAddButtonClicked = {},
+            searchDisplay = "",
+            onSearchDisplayChanged = { }
         )
     }
 }

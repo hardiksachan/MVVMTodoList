@@ -9,8 +9,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -25,8 +23,9 @@ import com.hardiksachan.mvvmtodolist.ui.theme.AppTheme
 fun TasksHeader(
     searchDisplay: String,
     onSearchDisplayChanged: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    onSortClicked: () -> Unit = {},
     onSearchDisplayClosed: () -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
     Surface(
         elevation = 8.dp,
@@ -47,7 +46,7 @@ fun TasksHeader(
                 onSearchDisplayClosed = onSearchDisplayClosed,
                 modifier = Modifier.fillMaxWidth(0.9f)
             )
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { onSortClicked() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_sort),
                     contentDescription = "sort icon"
@@ -61,14 +60,10 @@ fun TasksHeader(
 @Composable
 fun TasksHeaderPreview() {
 
-    val (search, changed) = remember {
-        mutableStateOf("")
-    }
-
     AppTheme {
         TasksHeader(
-            searchDisplay = search,
-            onSearchDisplayChanged = changed
+            searchDisplay = "",
+            onSearchDisplayChanged = {}
         )
     }
 }

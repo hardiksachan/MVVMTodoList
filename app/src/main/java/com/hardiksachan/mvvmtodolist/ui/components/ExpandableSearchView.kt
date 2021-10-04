@@ -35,67 +35,25 @@ fun ExpandableSearchView(
         mutableStateOf(expandedInitially)
     }
 
-    val focusManager = LocalFocusManager.current
-
 
     Crossfade(targetState = expanded) { isSearchFieldVisible ->
         when (isSearchFieldVisible) {
-            true ->
-                Row(
-                    modifier = modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = {
-                        onExpandedChanged(false)
-                        onSearchDisplayClosed()
-                    }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_back),
-                            contentDescription = "back icon",
-                            tint = tint
-                        )
-                    }
-                    TextField(
-                        value = searchDisplay,
-                        onValueChange = { onSearchDisplayChanged(it) },
-                        trailingIcon = {
-                            SearchIcon(iconTint = tint)
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        label = {
-                            Text(text = "Search", color = tint)
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                focusManager.clearFocus()
-                            }
-                        )
-                    )
-                }
-            false -> Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 2.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Tasks",
-                    style = MaterialTheme.typography.h6,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
-                IconButton(onClick = { onExpandedChanged(true) }) {
-                    SearchIcon(iconTint = tint)
-                }
-            }
+            true -> CollapsedSearchView(
+                searchDisplay = searchDisplay,
+                onSearchDisplayChanged = onSearchDisplayChanged,
+                onSearchDisplayClosed = onSearchDisplayClosed,
+                onExpandedChanged = onExpandedChanged,
+                modifier = modifier,
+                tint = tint
+            )
+
+            false -> ExpandedSearchView(
+                onExpandedChanged = onExpandedChanged,
+                modifier = modifier,
+                tint = tint
+            )
         }
     }
-
-
 }
 
 @Composable
@@ -107,6 +65,77 @@ fun SearchIcon(iconTint: Color) {
     )
 }
 
+@Composable
+fun ExpandedSearchView(
+    onExpandedChanged: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    tint: Color = MaterialTheme.colors.onPrimary,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 2.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "Tasks",
+            style = MaterialTheme.typography.h6,
+            modifier = Modifier.padding(start = 16.dp)
+        )
+        IconButton(onClick = { onExpandedChanged(true) }) {
+            SearchIcon(iconTint = tint)
+        }
+    }
+}
+
+@Composable
+fun CollapsedSearchView(
+    searchDisplay: String,
+    onSearchDisplayChanged: (String) -> Unit,
+    onSearchDisplayClosed: () -> Unit,
+    onExpandedChanged: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    tint: Color = MaterialTheme.colors.onPrimary,
+) {
+    val focusManager = LocalFocusManager.current
+
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(onClick = {
+            onExpandedChanged(false)
+            onSearchDisplayClosed()
+        }) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_back),
+                contentDescription = "back icon",
+                tint = tint
+            )
+        }
+        TextField(
+            value = searchDisplay,
+            onValueChange = { onSearchDisplayChanged(it) },
+            trailingIcon = {
+                SearchIcon(iconTint = tint)
+            },
+            modifier = Modifier.fillMaxWidth(),
+            label = {
+                Text(text = "Search", color = tint)
+            },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus()
+                }
+            )
+        )
+    }
+}
 
 @Preview
 @Composable
