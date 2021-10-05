@@ -6,7 +6,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface ILocalDataSource {
 
-    fun getAllTasks(): Flow<ResultWrapper<Exception, List<Task>>>
+    fun getFilteredTasks(
+        nameQuery: String
+    ): Flow<ResultWrapper<Exception, List<Task>>>
 
     suspend fun getTaskWithId(id: String): ResultWrapper<Exception, Task>
 

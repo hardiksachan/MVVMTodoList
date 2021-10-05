@@ -18,9 +18,9 @@ class LocalDataSourceImpl(
     private val dispatcherProvider: IDispatcherProvider
 ) : ILocalDataSource {
 
-    override fun getAllTasks(): Flow<ResultWrapper<Exception, List<Task>>> =
+    override fun getFilteredTasks(nameQuery: String): Flow<ResultWrapper<Exception, List<Task>>> =
         taskEntityQueries
-            .selectAll()
+            .selectFilteredByName(value = nameQuery)
             .asFlow()
             .mapToList(dispatcherProvider.IO)
             .map { taskEntities ->

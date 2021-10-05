@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.Flow
 class TaskRepositoryImpl(
     private val localDataSource: ILocalDataSource
 ) : ITaskRepository {
-    override fun getAllTasks(): Flow<ResultWrapper<Exception, List<Task>>> =
-        localDataSource.getAllTasks()
+    override fun getFilteredTasks(nameQuery: String): Flow<ResultWrapper<Exception, List<Task>>> =
+        localDataSource.getFilteredTasks(nameQuery)
 
     override suspend fun getTaskWithId(id: String): ResultWrapper<Exception, Task> =
         localDataSource.getTaskWithId(id)

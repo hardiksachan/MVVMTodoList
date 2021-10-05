@@ -9,12 +9,17 @@ CREATE TABLE TaskEntity (
 selectAll:
 SELECT *
 FROM TaskEntity
-ORDER BY created DESC;
+ORDER BY important DESC;
 
 selectById:
 SELECT *
 FROM TaskEntity
 WHERE id = ?;
+
+selectFilteredByName:
+SELECT *
+FROM TaskEntity
+WHERE name LIKE '%' || ? || '%';
 
 insertOrReplace:
 INSERT OR REPLACE INTO TaskEntity(
