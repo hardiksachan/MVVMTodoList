@@ -19,7 +19,16 @@ WHERE id = ?;
 selectFilteredByName:
 SELECT *
 FROM TaskEntity
-WHERE name LIKE '%' || ? || '%';
+WHERE (completed != :hideCompleted OR completed = 0)
+AND name LIKE '%' || :nameQuery || '%'
+ORDER BY important DESC, name;
+
+selectFilteredByDate:
+SELECT *
+FROM TaskEntity
+WHERE (completed != :hideCompleted OR completed = 0)
+AND name LIKE '%' || :nameQuery || '%'
+ORDER BY important DESC, created DESC;
 
 insertOrReplace:
 INSERT OR REPLACE INTO TaskEntity(

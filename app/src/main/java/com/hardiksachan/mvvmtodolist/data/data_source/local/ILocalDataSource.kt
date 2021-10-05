@@ -6,8 +6,14 @@ import kotlinx.coroutines.flow.Flow
 
 interface ILocalDataSource {
 
-    fun getFilteredTasks(
-        nameQuery: String
+    fun getFilteredTasksByName(
+        nameQuery: String,
+        hideCompleted: Boolean
+    ): Flow<ResultWrapper<Exception, List<Task>>>
+
+    fun getFilteredTasksByDate(
+        nameQuery: String,
+        hideCompleted: Boolean
     ): Flow<ResultWrapper<Exception, List<Task>>>
 
     suspend fun getTaskWithId(id: String): ResultWrapper<Exception, Task>

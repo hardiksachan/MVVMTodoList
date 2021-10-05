@@ -1,10 +1,12 @@
 package com.hardiksachan.mvvmtodolist.data.data_source.local
 
+import com.hardiksachan.mvvmtodolist.TaskEntity
 import com.hardiksachan.mvvmtodolist.TaskEntityQueries
 import com.hardiksachan.mvvmtodolist.common.IDispatcherProvider
 import com.hardiksachan.mvvmtodolist.common.ResultWrapper
 import com.hardiksachan.mvvmtodolist.data.data_source.local.mappers.toDomain
 import com.hardiksachan.mvvmtodolist.domain.entity.Task
+import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.flow.Flow
@@ -18,20 +20,28 @@ class LocalDataSourceImpl(
     private val dispatcherProvider: IDispatcherProvider
 ) : ILocalDataSource {
 
-    override fun getFilteredTasks(nameQuery: String): Flow<ResultWrapper<Exception, List<Task>>> =
+    override fun getFilteredTasksByName(
+        nameQuery: String,
+        hideCompleted: Boolean
+    ): Flow<ResultWrapper<Exception, List<Task>>> =
         taskEntityQueries
-            .selectFilteredByName(value = nameQuery)
-            .asFlow()
-            .mapToList(dispatcherProvider.IO)
-            .map { taskEntities ->
-                ResultWrapper.build {
-                    taskEntities.toDomain()
-                }
-            }
-            .catch { e ->
-                ResultWrapper.Failure(e)
-            }
-            .flowOn(dispatcherProvider.IO)
+            .selectFilteredByName(
+                hideCompleted = hideCompleted,
+                nameQuery = nameQuery
+            )
+            .mapToResultWrapper()
+
+
+    override fun getFilteredTasksByDate(
+        nameQuery: String,
+        hideCompleted: Boolean
+    ): Flow<ResultWrapper<Exception, List<Task>>>  =
+        taskEntityQueries
+            .selectFilteredByDate(
+                hideCompleted = hideCompleted,
+                nameQuery = nameQuery
+            )
+            .mapToResultWrapper()
 
 
     override suspend fun getTaskWithId(id: String): ResultWrapper<Exception, Task> =
@@ -63,4 +73,17 @@ class LocalDataSourceImpl(
             taskEntityQueries
                 .deleteById(task.id)
         }
+
+    private fun Query<TaskEntity>.mapToResultWrapper(): Flow<ResultWrapper<Exception, List<Task>>> =
+        this.asFlow()
+            .mapToList(dispatcherProvider.IO)
+            .map { taskEntities ->
+                ResultWrapper.build {
+                    taskEntities.toDomain()
+                }
+            }
+            .catch { e ->
+                ResultWrapper.Failure(e)
+            }
+            .flowOn(dispatcherProvider.IO)
 }
