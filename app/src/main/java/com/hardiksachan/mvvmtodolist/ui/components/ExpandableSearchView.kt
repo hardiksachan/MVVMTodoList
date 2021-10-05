@@ -8,15 +8,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hardiksachan.mvvmtodolist.R
@@ -38,7 +40,7 @@ fun ExpandableSearchView(
 
     Crossfade(targetState = expanded) { isSearchFieldVisible ->
         when (isSearchFieldVisible) {
-            true -> CollapsedSearchView(
+            true -> ExpandedSearchView(
                 searchDisplay = searchDisplay,
                 onSearchDisplayChanged = onSearchDisplayChanged,
                 onSearchDisplayClosed = onSearchDisplayClosed,
@@ -47,7 +49,7 @@ fun ExpandableSearchView(
                 tint = tint
             )
 
-            false -> ExpandedSearchView(
+            false -> CollapsedSearchView(
                 onExpandedChanged = onExpandedChanged,
                 modifier = modifier,
                 tint = tint
@@ -66,11 +68,12 @@ fun SearchIcon(iconTint: Color) {
 }
 
 @Composable
-fun ExpandedSearchView(
+fun CollapsedSearchView(
     onExpandedChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     tint: Color = MaterialTheme.colors.onPrimary,
 ) {
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -81,7 +84,8 @@ fun ExpandedSearchView(
         Text(
             text = "Tasks",
             style = MaterialTheme.typography.h6,
-            modifier = Modifier.padding(start = 16.dp)
+            modifier = Modifier
+                .padding(start = 16.dp)
         )
         IconButton(onClick = { onExpandedChanged(true) }) {
             SearchIcon(iconTint = tint)
@@ -90,7 +94,7 @@ fun ExpandedSearchView(
 }
 
 @Composable
-fun CollapsedSearchView(
+fun ExpandedSearchView(
     searchDisplay: String,
     onSearchDisplayChanged: (String) -> Unit,
     onSearchDisplayClosed: () -> Unit,
@@ -99,6 +103,16 @@ fun CollapsedSearchView(
     tint: Color = MaterialTheme.colors.onPrimary,
 ) {
     val focusManager = LocalFocusManager.current
+
+    val textFieldFocusRequester = remember { FocusRequester() }
+
+    SideEffect {
+        textFieldFocusRequester.requestFocus()
+    }
+
+    var textFieldValue by remember {
+        mutableStateOf(TextFieldValue(searchDisplay, TextRange(searchDisplay.length)))
+    }
 
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -116,12 +130,17 @@ fun CollapsedSearchView(
             )
         }
         TextField(
-            value = searchDisplay,
-            onValueChange = { onSearchDisplayChanged(it) },
+            value = textFieldValue,
+            onValueChange = {
+                textFieldValue = it
+                onSearchDisplayChanged(it.text)
+            },
             trailingIcon = {
                 SearchIcon(iconTint = tint)
             },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(textFieldFocusRequester),
             label = {
                 Text(text = "Search", color = tint)
             },
