@@ -21,7 +21,8 @@ import com.hardiksachan.mvvmtodolist.ui.theme.AppTheme
 @Composable
 fun TaskItem(
     task: Task,
-    modifier: Modifier = Modifier
+    onCheckChanged: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier
@@ -29,7 +30,10 @@ fun TaskItem(
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Checkbox(checked = task.completed, onCheckedChange = {})
+        Checkbox(
+            checked = task.completed,
+            onCheckedChange = onCheckChanged,
+        )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = task.name,
@@ -54,7 +58,10 @@ fun TaskItem(
 fun TaskItemPreview() {
     AppTheme {
         Surface {
-            TaskItem(task = Task("A very simple and boring task"))
+            TaskItem(
+                task = Task("A very simple and boring task"),
+                onCheckChanged = {}
+            )
         }
     }
 }
@@ -69,7 +76,8 @@ fun ImportantTaskItemPreview() {
                 task = Task(
                     "An important task which has a really long name",
                     important = true
-                )
+                ),
+                onCheckChanged = {}
             )
         }
     }
@@ -85,7 +93,8 @@ fun CompletedTaskItemPreview() {
                 task = Task(
                     "A completed task with a considerable number of letters",
                     completed = true
-                )
+                ),
+                onCheckChanged = {}
             )
         }
     }

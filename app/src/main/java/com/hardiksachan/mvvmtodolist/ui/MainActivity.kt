@@ -9,7 +9,9 @@ import com.hardiksachan.mvvmtodolist.ui.nav.NavigationComponent
 import com.hardiksachan.mvvmtodolist.ui.nav.Navigator
 import com.hardiksachan.mvvmtodolist.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -21,7 +23,10 @@ class MainActivity : ComponentActivity() {
                 val navigator = remember {
                     Navigator()
                 }
-                NavigationComponent(navController = navController, navigator = navigator)
+                NavigationComponent(
+                    navController = navController,
+                    navigator = navigator
+                )
             }
         }
     }

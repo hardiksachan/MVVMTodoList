@@ -21,6 +21,7 @@ fun TasksPage(
     tasks: List<Task>,
     onAddButtonClicked: () -> Unit,
     searchDisplay: String,
+    onTaskCheckChanged: (Task, Boolean) -> Unit,
     onSearchDisplayChanged: (String) -> Unit
 ) {
 
@@ -44,7 +45,12 @@ fun TasksPage(
     ) {
         LazyColumn {
             items(tasks) { task: Task ->
-                TaskItem(task = task)
+                TaskItem(task = task
+                ,
+                    onCheckChanged = {
+                        onTaskCheckChanged(task, it)
+                    }
+                )
             }
         }
     }
@@ -63,13 +69,13 @@ fun TasksPagePreview() {
     }
 
 
-
     AppTheme {
         TasksPage(
             tasks = tasks,
             onAddButtonClicked = {},
             searchDisplay = "",
-            onSearchDisplayChanged = { }
+            onSearchDisplayChanged = { },
+            onTaskCheckChanged = { _, _ -> }
         )
     }
 }

@@ -2,20 +2,24 @@ package com.hardiksachan.mvvmtodolist.ui.nav
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.hardiksachan.mvvmtodolist.presentation_logic.page_view_tasks.TasksPageEvent
+import com.hardiksachan.mvvmtodolist.presentation_logic.page_view_tasks.TasksViewModel
 import com.hardiksachan.mvvmtodolist.ui.page_add_edit_task.AddEditTaskPage
 import com.hardiksachan.mvvmtodolist.ui.page_view_tasks.TasksPage
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+@ExperimentalCoroutinesApi
 @Composable
 fun NavigationComponent(
     navController: NavHostController,
-    navigator: Navigator
+    navigator: Navigator,
 ) {
     LaunchedEffect("navigation") {
         navigator.pageStream.onEach {
@@ -28,19 +32,23 @@ fun NavigationComponent(
         startDestination = NavTargets.viewTasks.destination
     ) {
         composable(NavTargets.viewTasks.destination) {
-            // TODO: hook up viewModel
 
+            val vm: TasksViewModel = hiltViewModel()
 
-            val (search, searchChanged) = remember {
-                mutableStateOf("")
-            }
+            val tasks = vm.tasks.collectAsState()
+            val searchDisplay = vm.searchDisplay.collectAsState()
 
             TasksPage(
-                tasks = listOf(),
-                searchDisplay = search,
-                onSearchDisplayChanged = searchChanged,
+                tasks = tasks.value,
+                searchDisplay = searchDisplay.value,
+                onSearchDisplayChanged = {
+                    vm.onEvent(TasksPageEvent.SearchQueryChanged(it))
+                },
                 onAddButtonClicked = {
-                    navigator.navigateTo(NavTargets.AddEditTask.addTask) // TODO: remove
+                    // TODO
+                },
+                onTaskCheckChanged = { task, checked ->
+                    vm.onEvent(TasksPageEvent.TaskCheckedChanged(task, checked))
                 }
             )
         }
