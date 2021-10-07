@@ -23,13 +23,19 @@ import com.hardiksachan.mvvmtodolist.ui.theme.AppTheme
 fun TasksHeader(
     searchDisplay: String,
     onSearchDisplayChanged: (String) -> Unit,
+    onSortMenuClicked: () -> Unit,
+    onSearchDisplayClosed: () -> Unit,
+    sortMenuVisible: Boolean,
+    onSortMenuDismissRequest: () -> Unit,
+    onSortByNameClicked: () -> Unit,
+    onSortByDateClicked: () -> Unit,
+    hideOptionsMenuVisible: Boolean,
+    onHideOptionsMenuDismissRequest: () -> Unit,
+    showCompleted: Boolean,
+    onShowCompletedToggled: () -> Unit,
+    onDeleteCompletedClicked: () -> Unit,
+    onHideOptionsMenuClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    onSortMenuClicked: () -> Unit = {},
-    onSearchDisplayClosed: () -> Unit = {},
-    sortMenuVisible: Boolean = false,
-    onSortMenuDismissRequest: () -> Unit = {},
-    onSortByNameClicked: () -> Unit = {},
-    onSortByDateClicked: () -> Unit = {}
 ) {
     Surface(
         elevation = 8.dp,
@@ -48,7 +54,7 @@ fun TasksHeader(
                 searchDisplay = searchDisplay,
                 onSearchDisplayChanged = onSearchDisplayChanged,
                 onSearchDisplayClosed = onSearchDisplayClosed,
-                modifier = Modifier.fillMaxWidth(0.9f)
+                modifier = Modifier.fillMaxWidth(0.8f)
             )
             IconButton(onClick = { onSortMenuClicked() }) {
                 Icon(
@@ -62,6 +68,19 @@ fun TasksHeader(
                     onSortByDateClicked = onSortByDateClicked,
                 )
             }
+            IconButton(onClick = onHideOptionsMenuClicked) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_more),
+                    contentDescription = "more icon"
+                )
+                HideOptionsDropdown(
+                    expanded = hideOptionsMenuVisible,
+                    onDismissRequest = onHideOptionsMenuDismissRequest,
+                    showCompleted = showCompleted,
+                    showCompletedToggled = onShowCompletedToggled,
+                    deleteCompletedClicked = onDeleteCompletedClicked,
+                )
+            }
         }
     }
 }
@@ -73,8 +92,18 @@ fun TasksHeaderPreview() {
     AppTheme {
         TasksHeader(
             searchDisplay = "",
-            onSearchDisplayChanged = {},
-            sortMenuVisible = true,
-        )
+            onSearchDisplayChanged = { },
+            onSortMenuClicked = { },
+            onSearchDisplayClosed = { },
+            sortMenuVisible = false,
+            onSortMenuDismissRequest = { },
+            onSortByNameClicked = { },
+            onSortByDateClicked = { },
+            hideOptionsMenuVisible = false,
+            onHideOptionsMenuDismissRequest = { },
+            showCompleted = true,
+            onShowCompletedToggled = { },
+            onDeleteCompletedClicked = { },
+            onHideOptionsMenuClicked = { })
     }
 }

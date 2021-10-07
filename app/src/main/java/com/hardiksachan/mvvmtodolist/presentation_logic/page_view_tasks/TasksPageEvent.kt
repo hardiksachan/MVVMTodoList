@@ -8,5 +8,9 @@ sealed class TasksPageEvent {
     data class TaskCheckedChanged(val task: Task, val checked: Boolean): TasksPageEvent()
     object SortMenuToggled: TasksPageEvent()
     object SortMenuDismissed: TasksPageEvent()
+    object HideOptionsMenuToggled: TasksPageEvent()
+    object HideOptionsMenuDismissed: TasksPageEvent()
     data class SortByRequested(val sortOrder: SortOrder): TasksPageEvent()
+    object ShowCompletedToggled: TasksPageEvent()
+    object DeleteCompletedTasksRequested: TasksPageEvent()
 }

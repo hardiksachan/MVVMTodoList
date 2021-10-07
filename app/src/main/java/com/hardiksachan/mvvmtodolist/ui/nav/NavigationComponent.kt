@@ -14,6 +14,7 @@ import com.hardiksachan.mvvmtodolist.ui.page_add_edit_task.AddEditTaskPage
 import com.hardiksachan.mvvmtodolist.ui.page_view_tasks.TasksPage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 
 @ExperimentalCoroutinesApi
@@ -39,6 +40,10 @@ fun NavigationComponent(
             val tasks = vm.tasks.collectAsState()
             val searchDisplay = vm.searchDisplay.collectAsState()
             val sortMenuVisible = vm.sortMenuVisible.collectAsState()
+            val hideOptionsMenuVisible = vm.hideOptionsMenuVisible.collectAsState()
+            val showCompleted = vm.filterPreferences.map { it.hideCompleted.not() }.collectAsState(
+                initial = true
+            )
 
             TasksPage(
                 tasks = tasks.value,
@@ -63,7 +68,22 @@ fun NavigationComponent(
                 }, onSortByNameClicked = {
                     vm.onEvent(TasksPageEvent.SortByRequested(SortOrder.BY_NAME))
                 },
-                sortMenuVisible =sortMenuVisible.value
+                sortMenuVisible =sortMenuVisible.value,
+                hideOptionsMenuVisible = hideOptionsMenuVisible.value,
+                onHideOptionsMenuClicked = {
+                    vm.onEvent(TasksPageEvent.HideOptionsMenuToggled)
+                },
+                onHideOptionsMenuDismissRequest = {
+                    vm.onEvent(TasksPageEvent.HideOptionsMenuDismissed)
+                },
+                showCompleted = showCompleted.value,
+                onShowCompletedToggled = {
+                    vm.onEvent(TasksPageEvent.ShowCompletedToggled)
+                },
+                onDeleteCompletedClicked = {
+                    vm.onEvent(TasksPageEvent.DeleteCompletedTasksRequested)
+                },
+                onSearchDisplayClosed = {},
             )
         }
 

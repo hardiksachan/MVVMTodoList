@@ -37,6 +37,32 @@ constructor(
         is TasksPageEvent.SortByRequested -> handleSortByRequested(order = event.sortOrder)
         TasksPageEvent.SortMenuDismissed -> handleSortMenuDismissed()
         TasksPageEvent.SortMenuToggled -> handleSortMenuToggled()
+        TasksPageEvent.DeleteCompletedTasksRequested -> handleDeleteCompletedTasksRequested()
+        TasksPageEvent.HideOptionsMenuDismissed -> handleHideOptionsMenuDismissed()
+        TasksPageEvent.HideOptionsMenuToggled -> handleHideOptionsMenuToggled()
+        TasksPageEvent.ShowCompletedToggled -> handleShowCompletedToggled()
+    }
+
+    private fun handleShowCompletedToggled() {
+        viewModelScope.launch {
+            prefsRepository.updateHideCompleted(filterPreferences.value.hideCompleted.not())
+        }
+    }
+
+    private fun handleHideOptionsMenuToggled() {
+        viewModelScope.launch {
+            _hideOptionsMenuVisible.emit(_hideOptionsMenuVisible.value.not())
+        }
+    }
+
+    private fun handleHideOptionsMenuDismissed() {
+        viewModelScope.launch {
+            _hideOptionsMenuVisible.emit(false)
+        }
+    }
+
+    private fun handleDeleteCompletedTasksRequested() {
+        // TODO
     }
 
     private fun handleSortMenuToggled() {
@@ -74,6 +100,7 @@ constructor(
     // FOR UI STATE (PRIVATE)
     private val _searchDisplay = MutableStateFlow("")
     private val _sortMenuVisible = MutableStateFlow(false)
+    private val _hideOptionsMenuVisible = MutableStateFlow(false)
 
     // FOR UI STATE (PUBLIC)
     val filterPreferences: StateFlow<FilterPreferences> =
@@ -113,4 +140,5 @@ constructor(
         )
     val searchDisplay: StateFlow<String> = _searchDisplay
     val sortMenuVisible: StateFlow<Boolean> = _sortMenuVisible
+    val hideOptionsMenuVisible: StateFlow<Boolean> = _hideOptionsMenuVisible
 }

@@ -27,7 +27,14 @@ fun TasksPage(
     onSortMenuDismissRequest: () -> Unit,
     onSortMenuClicked: () -> Unit,
     onSortByNameClicked: () -> Unit,
-    onSortByDateClicked: () -> Unit
+    onSortByDateClicked: () -> Unit,
+    hideOptionsMenuVisible: Boolean,
+    onHideOptionsMenuDismissRequest: () -> Unit,
+    showCompleted: Boolean,
+    onShowCompletedToggled: () -> Unit,
+    onDeleteCompletedClicked: () -> Unit,
+    onHideOptionsMenuClicked: () -> Unit,
+    onSearchDisplayClosed: () -> Unit,
 ) {
 
     Scaffold(
@@ -46,10 +53,17 @@ fun TasksPage(
                 searchDisplay = searchDisplay,
                 onSearchDisplayChanged = onSearchDisplayChanged,
                 onSortMenuClicked = onSortMenuClicked,
+                sortMenuVisible = sortMenuVisible,
                 onSortMenuDismissRequest = onSortMenuDismissRequest,
                 onSortByNameClicked = onSortByNameClicked,
                 onSortByDateClicked = onSortByDateClicked,
-                sortMenuVisible = sortMenuVisible
+                onSearchDisplayClosed = onSearchDisplayClosed,
+                hideOptionsMenuVisible = hideOptionsMenuVisible,
+                onHideOptionsMenuDismissRequest = onHideOptionsMenuDismissRequest,
+                showCompleted = showCompleted,
+                onShowCompletedToggled = onShowCompletedToggled,
+                onDeleteCompletedClicked = onDeleteCompletedClicked,
+                onHideOptionsMenuClicked = onHideOptionsMenuClicked
             )
         }
     ) {
@@ -81,15 +95,22 @@ fun TasksPagePreview() {
     AppTheme {
         TasksPage(
             tasks = tasks,
-            onAddButtonClicked = {},
+            onAddButtonClicked = { /*TODO*/ },
             searchDisplay = "",
-            onSearchDisplayChanged = { },
             onTaskCheckChanged = { _, _ -> },
-            onSortMenuDismissRequest = {},
-            onSortByNameClicked = {},
-            onSortByDateClicked = {},
-            onSortMenuClicked = {},
-            sortMenuVisible = true
-        )
+            onSearchDisplayChanged = {},
+            sortMenuVisible = false,
+            onSortMenuDismissRequest = { /*TODO*/ },
+            onSortMenuClicked = { /*TODO*/ },
+            onSortByNameClicked = { /*TODO*/ },
+            onSortByDateClicked = { /*TODO*/ },
+            hideOptionsMenuVisible = false,
+            onHideOptionsMenuDismissRequest = { /*TODO*/ },
+            showCompleted = true,
+            onShowCompletedToggled = { /*TODO*/ },
+            onDeleteCompletedClicked = { /*TODO*/ },
+            onHideOptionsMenuClicked = { /*TODO*/ }) {
+
+        }
     }
 }
