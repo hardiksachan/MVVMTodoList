@@ -6,32 +6,31 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.hardiksachan.mvvmtodolist.presentation_logic.page_view_tasks.TasksPageEvent
 
 
 @Composable
 fun HideOptionsDropdown(
     expanded: Boolean,
     showCompleted: Boolean,
-    onDismissRequest: () -> Unit,
-    showCompletedToggled: () -> Unit,
-    deleteCompletedClicked: () -> Unit,
+    onEvent: (TasksPageEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     DropdownMenu(
         expanded = expanded,
-        onDismissRequest = { onDismissRequest() }
+        onDismissRequest = { onEvent(TasksPageEvent.HideOptionsMenuDismissed) }
     ) {
-        DropdownMenuItem(onClick = { showCompletedToggled() }) {
+        DropdownMenuItem(onClick = { onEvent(TasksPageEvent.ShowCompletedToggled) }) {
             Text("Show Completed")
             Spacer(modifier = Modifier.width(16.dp))
             Checkbox(
                 checked = showCompleted,
-                onCheckedChange = { showCompletedToggled() }
+                onCheckedChange = { onEvent(TasksPageEvent.ShowCompletedToggled) }
             )
         }
         Divider()
-        DropdownMenuItem(onClick = { deleteCompletedClicked() }) {
+        DropdownMenuItem(onClick = { onEvent(TasksPageEvent.DeleteCompletedTasksRequested) }) {
             Text("Delete All Completed")
         }
     }

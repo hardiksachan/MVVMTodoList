@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hardiksachan.mvvmtodolist.R
+import com.hardiksachan.mvvmtodolist.presentation_logic.page_view_tasks.TasksPageEvent
 import com.hardiksachan.mvvmtodolist.ui.components.ExpandableSearchView
 import com.hardiksachan.mvvmtodolist.ui.theme.AppTheme
 
@@ -22,19 +23,10 @@ import com.hardiksachan.mvvmtodolist.ui.theme.AppTheme
 @Composable
 fun TasksHeader(
     searchDisplay: String,
-    onSearchDisplayChanged: (String) -> Unit,
-    onSortMenuClicked: () -> Unit,
-    onSearchDisplayClosed: () -> Unit,
     sortMenuVisible: Boolean,
-    onSortMenuDismissRequest: () -> Unit,
-    onSortByNameClicked: () -> Unit,
-    onSortByDateClicked: () -> Unit,
     hideOptionsMenuVisible: Boolean,
-    onHideOptionsMenuDismissRequest: () -> Unit,
     showCompleted: Boolean,
-    onShowCompletedToggled: () -> Unit,
-    onDeleteCompletedClicked: () -> Unit,
-    onHideOptionsMenuClicked: () -> Unit,
+    onEvent: (TasksPageEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -52,33 +44,29 @@ fun TasksHeader(
         ) {
             ExpandableSearchView(
                 searchDisplay = searchDisplay,
-                onSearchDisplayChanged = onSearchDisplayChanged,
-                onSearchDisplayClosed = onSearchDisplayClosed,
+                onSearchDisplayChanged = { onEvent(TasksPageEvent.SearchQueryChanged(it)) },
+                onSearchDisplayClosed = { },
                 modifier = Modifier.fillMaxWidth(0.8f)
             )
-            IconButton(onClick = { onSortMenuClicked() }) {
+            IconButton(onClick = { onEvent(TasksPageEvent.SortMenuToggled) }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_sort),
                     contentDescription = "sort icon"
                 )
                 SortDropdown(
                     expanded = sortMenuVisible,
-                    onDismissRequest = onSortMenuDismissRequest,
-                    onSortByNameClicked = onSortByNameClicked,
-                    onSortByDateClicked = onSortByDateClicked,
+                    onEvent = onEvent
                 )
             }
-            IconButton(onClick = onHideOptionsMenuClicked) {
+            IconButton(onClick = { onEvent(TasksPageEvent.HideOptionsMenuToggled) }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_more),
                     contentDescription = "more icon"
                 )
                 HideOptionsDropdown(
                     expanded = hideOptionsMenuVisible,
-                    onDismissRequest = onHideOptionsMenuDismissRequest,
                     showCompleted = showCompleted,
-                    showCompletedToggled = onShowCompletedToggled,
-                    deleteCompletedClicked = onDeleteCompletedClicked,
+                    onEvent = onEvent
                 )
             }
         }
@@ -92,18 +80,10 @@ fun TasksHeaderPreview() {
     AppTheme {
         TasksHeader(
             searchDisplay = "",
-            onSearchDisplayChanged = { },
-            onSortMenuClicked = { },
-            onSearchDisplayClosed = { },
             sortMenuVisible = false,
-            onSortMenuDismissRequest = { },
-            onSortByNameClicked = { },
-            onSortByDateClicked = { },
             hideOptionsMenuVisible = false,
-            onHideOptionsMenuDismissRequest = { },
             showCompleted = true,
-            onShowCompletedToggled = { },
-            onDeleteCompletedClicked = { },
-            onHideOptionsMenuClicked = { })
+            onEvent = { },
+        )
     }
 }

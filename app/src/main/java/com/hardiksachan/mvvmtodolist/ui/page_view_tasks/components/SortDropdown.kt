@@ -5,40 +5,25 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.hardiksachan.mvvmtodolist.ui.theme.AppTheme
+import com.hardiksachan.mvvmtodolist.domain.constants.SortOrder
+import com.hardiksachan.mvvmtodolist.presentation_logic.page_view_tasks.TasksPageEvent
 
 @Composable
 fun SortDropdown(
     expanded: Boolean,
-    onDismissRequest: () -> Unit,
-    onSortByNameClicked: () -> Unit,
-    onSortByDateClicked: () -> Unit,
+    onEvent: (TasksPageEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     DropdownMenu(
         expanded = expanded,
-        onDismissRequest = { onDismissRequest() }
+        onDismissRequest = { onEvent(TasksPageEvent.SortMenuDismissed)  }
     ) {
-        DropdownMenuItem(onClick = { onSortByNameClicked() }) {
+        DropdownMenuItem(onClick = {  onEvent(TasksPageEvent.SortByRequested(SortOrder.BY_NAME)) }) {
             Text("Sort by Name")
         }
-        DropdownMenuItem(onClick = { onSortByDateClicked() }) {
+        DropdownMenuItem(onClick = { onEvent(TasksPageEvent.SortByRequested(SortOrder.BY_DATE)) }) {
             Text("Sort by Date")
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SortDropdownPreview() {
-    AppTheme {
-        SortDropdown(
-            expanded = true,
-            onSortByDateClicked = {},
-            onDismissRequest = {},
-            onSortByNameClicked = {}
-        )
     }
 }

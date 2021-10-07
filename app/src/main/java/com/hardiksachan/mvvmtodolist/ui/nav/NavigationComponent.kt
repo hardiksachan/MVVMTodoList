@@ -7,8 +7,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.hardiksachan.mvvmtodolist.domain.constants.SortOrder
-import com.hardiksachan.mvvmtodolist.presentation_logic.page_view_tasks.TasksPageEvent
 import com.hardiksachan.mvvmtodolist.presentation_logic.page_view_tasks.TasksViewModel
 import com.hardiksachan.mvvmtodolist.ui.page_add_edit_task.AddEditTaskPage
 import com.hardiksachan.mvvmtodolist.ui.page_view_tasks.TasksPage
@@ -48,42 +46,10 @@ fun NavigationComponent(
             TasksPage(
                 tasks = tasks.value,
                 searchDisplay = searchDisplay.value,
-                onSearchDisplayChanged = {
-                    vm.onEvent(TasksPageEvent.SearchQueryChanged(it))
-                },
-                onAddButtonClicked = {
-                    // TODO
-                },
-                onTaskCheckChanged = { task, checked ->
-                    vm.onEvent(TasksPageEvent.TaskCheckedChanged(task, checked))
-                },
-                onSortMenuDismissRequest = {
-                    vm.onEvent(TasksPageEvent.SortMenuDismissed)
-                },
-                onSortMenuClicked = {
-                    vm.onEvent(TasksPageEvent.SortMenuToggled)
-                },
-                onSortByDateClicked = {
-                    vm.onEvent(TasksPageEvent.SortByRequested(SortOrder.BY_DATE))
-                }, onSortByNameClicked = {
-                    vm.onEvent(TasksPageEvent.SortByRequested(SortOrder.BY_NAME))
-                },
-                sortMenuVisible =sortMenuVisible.value,
+                sortMenuVisible = sortMenuVisible.value,
                 hideOptionsMenuVisible = hideOptionsMenuVisible.value,
-                onHideOptionsMenuClicked = {
-                    vm.onEvent(TasksPageEvent.HideOptionsMenuToggled)
-                },
-                onHideOptionsMenuDismissRequest = {
-                    vm.onEvent(TasksPageEvent.HideOptionsMenuDismissed)
-                },
                 showCompleted = showCompleted.value,
-                onShowCompletedToggled = {
-                    vm.onEvent(TasksPageEvent.ShowCompletedToggled)
-                },
-                onDeleteCompletedClicked = {
-                    vm.onEvent(TasksPageEvent.DeleteCompletedTasksRequested)
-                },
-                onSearchDisplayClosed = {},
+                onEvent = { vm.onEvent(it) }
             )
         }
 
