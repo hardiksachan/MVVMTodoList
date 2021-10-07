@@ -24,14 +24,18 @@ fun TasksHeader(
     searchDisplay: String,
     onSearchDisplayChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
-    onSortClicked: () -> Unit = {},
+    onSortMenuClicked: () -> Unit = {},
     onSearchDisplayClosed: () -> Unit = {},
+    sortMenuVisible: Boolean = false,
+    onSortMenuDismissRequest: () -> Unit = {},
+    onSortByNameClicked: () -> Unit = {},
+    onSortByDateClicked: () -> Unit = {}
 ) {
     Surface(
         elevation = 8.dp,
         modifier = modifier
             .fillMaxWidth(),
-        color = MaterialTheme.colors.primary
+        color = MaterialTheme.colors.primary,
     ) {
         Row(
             modifier = Modifier
@@ -46,24 +50,31 @@ fun TasksHeader(
                 onSearchDisplayClosed = onSearchDisplayClosed,
                 modifier = Modifier.fillMaxWidth(0.9f)
             )
-            IconButton(onClick = { onSortClicked() }) {
+            IconButton(onClick = { onSortMenuClicked() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_sort),
                     contentDescription = "sort icon"
+                )
+                SortDropdown(
+                    expanded = sortMenuVisible,
+                    onDismissRequest = onSortMenuDismissRequest,
+                    onSortByNameClicked = onSortByNameClicked,
+                    onSortByDateClicked = onSortByDateClicked,
                 )
             }
         }
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun TasksHeaderPreview() {
 
     AppTheme {
         TasksHeader(
             searchDisplay = "",
-            onSearchDisplayChanged = {}
+            onSearchDisplayChanged = {},
+            sortMenuVisible = true,
         )
     }
 }

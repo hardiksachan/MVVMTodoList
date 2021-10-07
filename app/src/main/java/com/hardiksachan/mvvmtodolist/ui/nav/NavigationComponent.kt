@@ -7,6 +7,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.hardiksachan.mvvmtodolist.domain.constants.SortOrder
 import com.hardiksachan.mvvmtodolist.presentation_logic.page_view_tasks.TasksPageEvent
 import com.hardiksachan.mvvmtodolist.presentation_logic.page_view_tasks.TasksViewModel
 import com.hardiksachan.mvvmtodolist.ui.page_add_edit_task.AddEditTaskPage
@@ -37,6 +38,7 @@ fun NavigationComponent(
 
             val tasks = vm.tasks.collectAsState()
             val searchDisplay = vm.searchDisplay.collectAsState()
+            val sortMenuVisible = vm.sortMenuVisible.collectAsState()
 
             TasksPage(
                 tasks = tasks.value,
@@ -49,7 +51,19 @@ fun NavigationComponent(
                 },
                 onTaskCheckChanged = { task, checked ->
                     vm.onEvent(TasksPageEvent.TaskCheckedChanged(task, checked))
-                }
+                },
+                onSortMenuDismissRequest = {
+                    vm.onEvent(TasksPageEvent.SortMenuDismissed)
+                },
+                onSortMenuClicked = {
+                    vm.onEvent(TasksPageEvent.SortMenuToggled)
+                },
+                onSortByDateClicked = {
+                    vm.onEvent(TasksPageEvent.SortByRequested(SortOrder.BY_DATE))
+                }, onSortByNameClicked = {
+                    vm.onEvent(TasksPageEvent.SortByRequested(SortOrder.BY_NAME))
+                },
+                sortMenuVisible =sortMenuVisible.value
             )
         }
 

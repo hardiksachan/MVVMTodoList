@@ -22,7 +22,12 @@ fun TasksPage(
     onAddButtonClicked: () -> Unit,
     searchDisplay: String,
     onTaskCheckChanged: (Task, Boolean) -> Unit,
-    onSearchDisplayChanged: (String) -> Unit
+    onSearchDisplayChanged: (String) -> Unit,
+    sortMenuVisible: Boolean,
+    onSortMenuDismissRequest: () -> Unit,
+    onSortMenuClicked: () -> Unit,
+    onSortByNameClicked: () -> Unit,
+    onSortByDateClicked: () -> Unit
 ) {
 
     Scaffold(
@@ -39,14 +44,18 @@ fun TasksPage(
         topBar = {
             TasksHeader(
                 searchDisplay = searchDisplay,
-                onSearchDisplayChanged = onSearchDisplayChanged
+                onSearchDisplayChanged = onSearchDisplayChanged,
+                onSortMenuClicked = onSortMenuClicked,
+                onSortMenuDismissRequest = onSortMenuDismissRequest,
+                onSortByNameClicked = onSortByNameClicked,
+                onSortByDateClicked = onSortByDateClicked,
+                sortMenuVisible = sortMenuVisible
             )
         }
     ) {
         LazyColumn {
             items(tasks) { task: Task ->
-                TaskItem(task = task
-                ,
+                TaskItem(task = task,
                     onCheckChanged = {
                         onTaskCheckChanged(task, it)
                     }
@@ -75,7 +84,12 @@ fun TasksPagePreview() {
             onAddButtonClicked = {},
             searchDisplay = "",
             onSearchDisplayChanged = { },
-            onTaskCheckChanged = { _, _ -> }
+            onTaskCheckChanged = { _, _ -> },
+            onSortMenuDismissRequest = {},
+            onSortByNameClicked = {},
+            onSortByDateClicked = {},
+            onSortMenuClicked = {},
+            sortMenuVisible = true
         )
     }
 }

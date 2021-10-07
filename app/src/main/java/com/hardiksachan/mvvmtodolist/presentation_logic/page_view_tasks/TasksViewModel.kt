@@ -5,7 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hardiksachan.mvvmtodolist.common.IDispatcherProvider
 import com.hardiksachan.mvvmtodolist.common.ResultWrapper
+import com.hardiksachan.mvvmtodolist.domain.constants.SortOrder
+import com.hardiksachan.mvvmtodolist.domain.entity.FilterPreferences
 import com.hardiksachan.mvvmtodolist.domain.entity.Task
+import com.hardiksachan.mvvmtodolist.domain.repository.IPreferencesRepository
 import com.hardiksachan.mvvmtodolist.domain.repository.ITaskRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,16 +24,37 @@ class TasksViewModel
 @Inject
 constructor(
     private val taskRepository: ITaskRepository,
+    private val prefsRepository: IPreferencesRepository,
     private val dispatcherProvider: IDispatcherProvider
 ) : ViewModel() {
 
-    fun onEvent(event: TasksPageEvent) {
-        when (event) {
-            is TasksPageEvent.SearchQueryChanged -> handleSearchQueryChanged(query = event.newQuery)
-            is TasksPageEvent.TaskCheckedChanged -> handleTaskChecked(
-                task = event.task,
-                completed = event.checked
-            )
+    fun onEvent(event: TasksPageEvent) = when (event) {
+        is TasksPageEvent.SearchQueryChanged -> handleSearchQueryChanged(query = event.newQuery)
+        is TasksPageEvent.TaskCheckedChanged -> handleTaskChecked(
+            task = event.task,
+            completed = event.checked
+        )
+        is TasksPageEvent.SortByRequested -> handleSortByRequested(order = event.sortOrder)
+        TasksPageEvent.SortMenuDismissed -> handleSortMenuDismissed()
+        TasksPageEvent.SortMenuToggled -> handleSortMenuToggled()
+    }
+
+    private fun handleSortMenuToggled() {
+        viewModelScope.launch {
+            _sortMenuVisible.emit(_sortMenuVisible.value.not())
+        }
+    }
+
+    private fun handleSortMenuDismissed() {
+        viewModelScope.launch {
+            _sortMenuVisible.emit(false)
+        }
+    }
+
+    private fun handleSortByRequested(order: SortOrder) {
+        viewModelScope.launch {
+            prefsRepository.updateSortOrder(order)
+            _sortMenuVisible.emit(false)
         }
     }
 
@@ -48,20 +72,31 @@ constructor(
 
 
     // FOR UI STATE (PRIVATE)
-    private val _tasks = MutableStateFlow(emptyList<Task>())
     private val _searchDisplay = MutableStateFlow("")
-    private val _effectStream = MutableSharedFlow<TasksPageEffect>()
+    private val _sortMenuVisible = MutableStateFlow(false)
 
     // FOR UI STATE (PUBLIC)
-    val tasks: StateFlow<List<Task>> = _tasks
-    val searchDisplay: StateFlow<String> = _searchDisplay
-    val effectStream: SharedFlow<TasksPageEffect> = _effectStream
-
-    init {
-        viewModelScope.launch {
-            _searchDisplay.flatMapLatest { searchQuery ->
-                taskRepository.getFilteredTasks(nameQuery = searchQuery)
-            }.map { result ->
+    val filterPreferences: StateFlow<FilterPreferences> =
+        prefsRepository.filterPreferencesFlow.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(500L),
+            initialValue = FilterPreferences(
+                sortOrder = SortOrder.BY_DATE,
+                hideCompleted = false
+            )
+        )
+    val tasks: StateFlow<List<Task>> =
+        combine(
+            _searchDisplay,
+            filterPreferences,
+        ) { searchQuery, filterPrefs ->
+            searchQuery to filterPrefs
+        }.flatMapLatest { (searchQuery, filterPrefs) ->
+            taskRepository.getFilteredTasks(
+                nameQuery = searchQuery,
+                sortOrder = filterPrefs.sortOrder,
+                hideCompleted = filterPrefs.hideCompleted
+            ).map { result ->
                 Log.d(TAG, "taskResult: $result")
                 when (result) {
                     is ResultWrapper.Failure -> {
@@ -70,9 +105,12 @@ constructor(
                     }
                     is ResultWrapper.Success -> result.result
                 }
-            }.collect { tasks ->
-                _tasks.emit(tasks)
             }
-        }
-    }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(500L),
+            initialValue = emptyList()
+        )
+    val searchDisplay: StateFlow<String> = _searchDisplay
+    val sortMenuVisible: StateFlow<Boolean> = _sortMenuVisible
 }
