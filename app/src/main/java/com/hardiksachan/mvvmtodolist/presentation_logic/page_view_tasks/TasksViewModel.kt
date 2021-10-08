@@ -53,6 +53,7 @@ constructor(
     private fun handleShowCompletedToggled() {
         viewModelScope.launch {
             prefsRepository.updateHideCompleted(filterPreferences.value.hideCompleted.not())
+            dismissHideOptionsMenu()
         }
     }
 
@@ -64,12 +65,17 @@ constructor(
 
     private fun handleHideOptionsMenuDismissed() {
         viewModelScope.launch {
-            _hideOptionsMenuVisible.emit(false)
+            dismissHideOptionsMenu()
         }
     }
 
+    private suspend fun dismissHideOptionsMenu() = _hideOptionsMenuVisible.emit(false)
+
     private fun handleDeleteCompletedTasksRequested() {
-        // TODO
+        // TODO: show confirmation dialog
+        viewModelScope.launch {
+            dismissHideOptionsMenu()
+        }
     }
 
     private fun handleSortMenuToggled() {
