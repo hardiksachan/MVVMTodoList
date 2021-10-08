@@ -1,5 +1,6 @@
 package com.hardiksachan.mvvmtodolist.ui.nav
 
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 
+@ExperimentalMaterialApi
 @ExperimentalCoroutinesApi
 @Composable
 fun NavigationComponent(

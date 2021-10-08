@@ -16,12 +16,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hardiksachan.mvvmtodolist.R
 import com.hardiksachan.mvvmtodolist.domain.entity.Task
+import com.hardiksachan.mvvmtodolist.presentation_logic.page_view_tasks.TasksPageEvent
 import com.hardiksachan.mvvmtodolist.ui.theme.AppTheme
 
 @Composable
-fun TaskItem(
+fun TaskTile(
     task: Task,
-    onCheckChanged: (Boolean) -> Unit,
+    onEvent: (TasksPageEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -32,7 +33,9 @@ fun TaskItem(
     ) {
         Checkbox(
             checked = task.completed,
-            onCheckedChange = onCheckChanged,
+            onCheckedChange = { checked ->
+                onEvent(TasksPageEvent.TaskCheckedChanged(task = task, checked = checked))
+            },
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
@@ -58,9 +61,9 @@ fun TaskItem(
 fun TaskItemPreview() {
     AppTheme {
         Surface {
-            TaskItem(
+            TaskTile(
                 task = Task("A very simple and boring task"),
-                onCheckChanged = {}
+                onEvent = {}
             )
         }
     }
@@ -72,12 +75,12 @@ fun TaskItemPreview() {
 fun ImportantTaskItemPreview() {
     AppTheme {
         Surface {
-            TaskItem(
+            TaskTile(
                 task = Task(
                     "An important task which has a really long name",
                     important = true
                 ),
-                onCheckChanged = {}
+                onEvent = {}
             )
         }
     }
@@ -89,12 +92,12 @@ fun ImportantTaskItemPreview() {
 fun CompletedTaskItemPreview() {
     AppTheme {
         Surface {
-            TaskItem(
+            TaskTile(
                 task = Task(
                     "A completed task with a considerable number of letters",
                     completed = true
                 ),
-                onCheckChanged = {}
+                onEvent = {}
             )
         }
     }

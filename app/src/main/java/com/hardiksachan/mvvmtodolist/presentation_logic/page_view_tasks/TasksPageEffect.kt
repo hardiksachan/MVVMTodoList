@@ -1,5 +1,7 @@
 package com.hardiksachan.mvvmtodolist.presentation_logic.page_view_tasks
 
+import com.hardiksachan.mvvmtodolist.domain.entity.Task
+
 sealed class TasksPageEffect {
-    data class ShowToast(val message: String) : TasksPageEffect()
+    data class ShowUndoDeleteTaskMessage(val task: Task) : TasksPageEffect()
 }

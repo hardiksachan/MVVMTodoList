@@ -13,4 +13,5 @@ sealed class TasksPageEvent {
     data class SortByRequested(val sortOrder: SortOrder): TasksPageEvent()
     object ShowCompletedToggled: TasksPageEvent()
     object DeleteCompletedTasksRequested: TasksPageEvent()
+    data class DeleteTaskRequested(val task: Task): TasksPageEvent()
 }

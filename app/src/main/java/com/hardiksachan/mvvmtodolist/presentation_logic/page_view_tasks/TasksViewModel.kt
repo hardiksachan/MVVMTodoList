@@ -41,6 +41,13 @@ constructor(
         TasksPageEvent.HideOptionsMenuDismissed -> handleHideOptionsMenuDismissed()
         TasksPageEvent.HideOptionsMenuToggled -> handleHideOptionsMenuToggled()
         TasksPageEvent.ShowCompletedToggled -> handleShowCompletedToggled()
+        is TasksPageEvent.DeleteTaskRequested -> handleDeleteTaskRequested(task = event.task)
+    }
+
+    private fun handleDeleteTaskRequested(task: Task) {
+        viewModelScope.launch {
+            taskRepository.deleteTask(task)
+        }
     }
 
     private fun handleShowCompletedToggled() {
@@ -101,6 +108,7 @@ constructor(
     private val _searchDisplay = MutableStateFlow("")
     private val _sortMenuVisible = MutableStateFlow(false)
     private val _hideOptionsMenuVisible = MutableStateFlow(false)
+    private val _effectStream = MutableSharedFlow<TasksPageEffect>()
 
     // FOR UI STATE (PUBLIC)
     val filterPreferences: StateFlow<FilterPreferences> =
@@ -123,15 +131,15 @@ constructor(
                 nameQuery = searchQuery,
                 sortOrder = filterPrefs.sortOrder,
                 hideCompleted = filterPrefs.hideCompleted
-            ).map { result ->
-                Log.d(TAG, "taskResult: $result")
-                when (result) {
-                    is ResultWrapper.Failure -> {
-                        // todo: handle error case
-                        emptyList()
-                    }
-                    is ResultWrapper.Success -> result.result
+            )
+        }.map { result ->
+            Log.d(TAG, "taskResult: $result")
+            when (result) {
+                is ResultWrapper.Failure -> {
+                    // todo: handle error case
+                    emptyList()
                 }
+                is ResultWrapper.Success -> result.result
             }
         }.stateIn(
             scope = viewModelScope,
@@ -141,4 +149,5 @@ constructor(
     val searchDisplay: StateFlow<String> = _searchDisplay
     val sortMenuVisible: StateFlow<Boolean> = _sortMenuVisible
     val hideOptionsMenuVisible: StateFlow<Boolean> = _hideOptionsMenuVisible
+    val effectStream: SharedFlow<TasksPageEffect> = _effectStream
 }
