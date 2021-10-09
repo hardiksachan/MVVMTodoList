@@ -55,10 +55,10 @@ fun TaskListItem(
             contentDescription = "Delete Icon",
             modifier = Modifier
                 .align(Alignment.CenterEnd)
-                .padding(end = 12.dp)
                 .clickable {
                     onEvent(TasksPageEvent.DeleteTaskRequested(task))
-                },
+                }
+                .padding(end = 12.dp),
             tint = Color.White
         )
         TaskTile(

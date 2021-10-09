@@ -28,25 +28,38 @@ constructor(
     private val dispatcherProvider: IDispatcherProvider
 ) : ViewModel() {
 
-    fun onEvent(event: TasksPageEvent) = when (event) {
-        is TasksPageEvent.SearchQueryChanged -> handleSearchQueryChanged(query = event.newQuery)
-        is TasksPageEvent.TaskCheckedChanged -> handleTaskChecked(
-            task = event.task,
-            completed = event.checked
-        )
-        is TasksPageEvent.SortByRequested -> handleSortByRequested(order = event.sortOrder)
-        TasksPageEvent.SortMenuDismissed -> handleSortMenuDismissed()
-        TasksPageEvent.SortMenuToggled -> handleSortMenuToggled()
-        TasksPageEvent.DeleteCompletedTasksRequested -> handleDeleteCompletedTasksRequested()
-        TasksPageEvent.HideOptionsMenuDismissed -> handleHideOptionsMenuDismissed()
-        TasksPageEvent.HideOptionsMenuToggled -> handleHideOptionsMenuToggled()
-        TasksPageEvent.ShowCompletedToggled -> handleShowCompletedToggled()
-        is TasksPageEvent.DeleteTaskRequested -> handleDeleteTaskRequested(task = event.task)
+    fun onEvent(event: TasksPageEvent) {
+        Log.d(TAG, "onEvent: event: $event")
+        when (event) {
+            is TasksPageEvent.SearchQueryChanged -> handleSearchQueryChanged(query = event.newQuery)
+            is TasksPageEvent.TaskCheckedChanged -> handleTaskChecked(
+                task = event.task,
+                completed = event.checked
+            )
+            is TasksPageEvent.SortByRequested -> handleSortByRequested(order = event.sortOrder)
+            TasksPageEvent.SortMenuDismissed -> handleSortMenuDismissed()
+            TasksPageEvent.SortMenuToggled -> handleSortMenuToggled()
+            TasksPageEvent.DeleteCompletedTasksRequested -> handleDeleteCompletedTasksRequested()
+            TasksPageEvent.HideOptionsMenuDismissed -> handleHideOptionsMenuDismissed()
+            TasksPageEvent.HideOptionsMenuToggled -> handleHideOptionsMenuToggled()
+            TasksPageEvent.ShowCompletedToggled -> handleShowCompletedToggled()
+            is TasksPageEvent.DeleteTaskRequested -> handleDeleteTaskRequested(task = event.task)
+            is TasksPageEvent.UndoDeleteTask -> handleUndoDeleteTask(task = event.task)
+        }
+    }
+
+    private fun handleUndoDeleteTask(task: Task) {
+        viewModelScope.launch {
+            taskRepository.saveTask(task)
+        }
     }
 
     private fun handleDeleteTaskRequested(task: Task) {
         viewModelScope.launch {
             taskRepository.deleteTask(task)
+        }
+        viewModelScope.launch {
+            _effectStream.emit(TasksPageEffect.ShowUndoDeleteTaskMessage(task))
         }
     }
 

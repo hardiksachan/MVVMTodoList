@@ -22,10 +22,16 @@ fun TasksPage(
     sortMenuVisible: Boolean,
     hideOptionsMenuVisible: Boolean,
     showCompleted: Boolean,
+    snackbarHostState: SnackbarHostState,
     onEvent: (TasksPageEvent) -> Unit
 ) {
 
+    val scaffoldState = rememberScaffoldState(
+        snackbarHostState = snackbarHostState
+    )
+
     Scaffold(
+        scaffoldState = scaffoldState,
         floatingActionButton = {
             FloatingActionButton(onClick = { /*TODO*/ }) {
                 Icon(
@@ -73,7 +79,6 @@ fun TasksPagePreview() {
         )
     }
 
-
     AppTheme {
         TasksPage(
             tasks = tasks,
@@ -81,6 +86,7 @@ fun TasksPagePreview() {
             sortMenuVisible = false,
             hideOptionsMenuVisible = false,
             showCompleted = true,
+            snackbarHostState = SnackbarHostState(),
             onEvent = {}
         )
     }

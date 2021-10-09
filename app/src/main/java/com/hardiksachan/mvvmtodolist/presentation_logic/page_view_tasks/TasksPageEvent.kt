@@ -14,4 +14,5 @@ sealed class TasksPageEvent {
     object ShowCompletedToggled: TasksPageEvent()
     object DeleteCompletedTasksRequested: TasksPageEvent()
     data class DeleteTaskRequested(val task: Task): TasksPageEvent()
+    data class UndoDeleteTask(val task: Task): TasksPageEvent()
 }

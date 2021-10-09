@@ -1,13 +1,18 @@
 package com.hardiksachan.mvvmtodolist.ui.nav
 
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.hardiksachan.mvvmtodolist.presentation_logic.page_view_tasks.TasksPageEffect
+import com.hardiksachan.mvvmtodolist.presentation_logic.page_view_tasks.TasksPageEvent
 import com.hardiksachan.mvvmtodolist.presentation_logic.page_view_tasks.TasksViewModel
 import com.hardiksachan.mvvmtodolist.ui.page_add_edit_task.AddEditTaskPage
 import com.hardiksachan.mvvmtodolist.ui.page_view_tasks.TasksPage
@@ -45,12 +50,35 @@ fun NavigationComponent(
                 initial = true
             )
 
+            val snackbarHostState = remember { SnackbarHostState() }
+
+            LaunchedEffect(Unit) {
+                vm.effectStream.onEach {
+                    when (it) {
+                        is TasksPageEffect.ShowUndoDeleteTaskMessage -> {
+                            val snackbarResult = snackbarHostState.showSnackbar(
+                                message = "Task Deleted",
+                                actionLabel = "Undo"
+                            )
+                            when (snackbarResult) {
+                                SnackbarResult.Dismissed -> {
+                                }
+                                SnackbarResult.ActionPerformed -> {
+                                    vm.onEvent(TasksPageEvent.UndoDeleteTask(task = it.task))
+                                }
+                            }
+                        }
+                    }
+                }.launchIn(this)
+            }
+
             TasksPage(
                 tasks = tasks.value,
                 searchDisplay = searchDisplay.value,
                 sortMenuVisible = sortMenuVisible.value,
                 hideOptionsMenuVisible = hideOptionsMenuVisible.value,
                 showCompleted = showCompleted.value,
+                snackbarHostState = snackbarHostState,
                 onEvent = { vm.onEvent(it) }
             )
         }
