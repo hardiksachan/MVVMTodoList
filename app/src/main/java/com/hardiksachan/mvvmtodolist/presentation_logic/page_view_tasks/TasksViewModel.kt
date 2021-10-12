@@ -45,6 +45,20 @@ constructor(
             TasksPageEvent.ShowCompletedToggled -> handleShowCompletedToggled()
             is TasksPageEvent.DeleteTaskRequested -> handleDeleteTaskRequested(task = event.task)
             is TasksPageEvent.UndoDeleteTask -> handleUndoDeleteTask(task = event.task)
+            TasksPageEvent.AddTaskPressed -> handleAddTaskPressed()
+            is TasksPageEvent.EditTaskPressed -> handleEditTaskPressed(task = event.task)
+        }
+    }
+
+    private fun handleEditTaskPressed(task: Task) {
+        viewModelScope.launch {
+            _effectStream.emit(TasksPageEffect.NavigateToEditTask(task = task))
+        }
+    }
+
+    private fun handleAddTaskPressed() {
+        viewModelScope.launch {
+            _effectStream.emit(TasksPageEffect.NavigateToAddTask)
         }
     }
 

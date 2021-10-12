@@ -11,6 +11,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.hardiksachan.mvvmtodolist.presentation_logic.page_add_edit_task.EditPageEffect
+import com.hardiksachan.mvvmtodolist.presentation_logic.page_add_edit_task.EditPageEvent
+import com.hardiksachan.mvvmtodolist.presentation_logic.page_add_edit_task.EditPageViewModel
 import com.hardiksachan.mvvmtodolist.presentation_logic.page_view_tasks.TasksPageEffect
 import com.hardiksachan.mvvmtodolist.presentation_logic.page_view_tasks.TasksPageEvent
 import com.hardiksachan.mvvmtodolist.presentation_logic.page_view_tasks.TasksViewModel
@@ -68,6 +71,12 @@ fun NavigationComponent(
                                 }
                             }
                         }
+                        TasksPageEffect.NavigateToAddTask -> navigator.navigateTo(NavTargets.AddEditTask.addTask)
+                        is TasksPageEffect.NavigateToEditTask -> navigator.navigateTo(
+                            NavTargets.AddEditTask.editTask(
+                                it.task.id
+                            )
+                        )
                     }
                 }.launchIn(this)
             }
@@ -86,17 +95,38 @@ fun NavigationComponent(
         composable(NavTargets.AddEditTask.route) { entry ->
             val taskId = entry.arguments?.getString(NavTargets.AddEditTask.KEY_TASK_ID)
 
-            // TODO: hook up viewModel
+            val vm: EditPageViewModel = hiltViewModel()
+
+            LaunchedEffect(Unit) {
+                taskId?.let {
+                    vm.onEvent(EditPageEvent.InitWithTask(it))
+                }
+
+                vm.effectStream.onEach {
+                    when (it) {
+                        EditPageEffect.NavigateToListPage -> navigator.navigateTo(NavTargets.viewTasks)
+                    }
+                }.launchIn(this)
+            }
+
+            val appBarTitle = vm.pageTitle.collectAsState()
+            val taskName = vm.nameDisplay.collectAsState()
+            val isImportant = vm.isImportant.collectAsState()
+
             AddEditTaskPage(
-                appBarTitle = "Add Task",
-                taskName = "",
-                isImportant = false,
-                createdOn = "",
-                onCheckedChange = {},
-                onSubmit = {
-                    navigator.navigateTo(NavTargets.viewTasks) // TODO: remove
+                appBarTitle = appBarTitle.value,
+                taskName = taskName.value,
+                isImportant = isImportant.value,
+                createdOn = "to be initialised",
+                onCheckedChange = {
+                    vm.onEvent(EditPageEvent.IsImportantToggled)
                 },
-                onTaskNameChanged = {}
+                onSubmit = {
+                    vm.onEvent(EditPageEvent.SaveAndExit)
+                },
+                onTaskNameChanged = {
+                    vm.onEvent(EditPageEvent.NameChanged(it))
+                }
             )
         }
     }

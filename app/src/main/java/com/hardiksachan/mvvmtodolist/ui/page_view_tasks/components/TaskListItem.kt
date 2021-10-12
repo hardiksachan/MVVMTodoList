@@ -70,6 +70,9 @@ fun TaskListItem(
                     IntOffset(swipeableState.offset.value.roundToInt(), 0)
                 }
                 .background(MaterialTheme.colors.background)
+                .clickable {
+                    onEvent(TasksPageEvent.EditTaskPressed(task))
+                }
         )
     }
 }

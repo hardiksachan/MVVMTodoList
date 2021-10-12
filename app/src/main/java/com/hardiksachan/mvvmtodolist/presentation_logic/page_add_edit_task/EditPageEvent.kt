@@ -4,4 +4,6 @@ sealed class EditPageEvent {
     data class InitWithTask(val taskId: String): EditPageEvent()
     data class NameChanged(val newName: String): EditPageEvent()
     object IsImportantToggled: EditPageEvent()
+    object SaveAndExit: EditPageEvent()
+    object IgnoreAndExit: EditPageEvent()
 }

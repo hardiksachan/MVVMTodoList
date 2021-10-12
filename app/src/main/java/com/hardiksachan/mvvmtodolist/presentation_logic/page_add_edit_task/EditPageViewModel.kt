@@ -7,7 +7,9 @@ import com.hardiksachan.mvvmtodolist.common.ResultWrapper
 import com.hardiksachan.mvvmtodolist.domain.entity.Task
 import com.hardiksachan.mvvmtodolist.domain.repository.ITaskRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,12 +24,27 @@ constructor(
     private val taskRepository: ITaskRepository,
     private val dispatcherProvider: IDispatcherProvider
 ) : ViewModel() {
-    var editingTask: Task? = null
+    private var editingTask: Task? = null
 
     fun onEvent(event: EditPageEvent) = when (event) {
         is EditPageEvent.InitWithTask -> handleInitWithTask(taskId = event.taskId)
         EditPageEvent.IsImportantToggled -> TODO()
         is EditPageEvent.NameChanged -> TODO()
+        EditPageEvent.IgnoreAndExit -> handleIgnoreAndExit()
+        EditPageEvent.SaveAndExit -> handleSaveAndExit()
+    }
+
+    private fun handleSaveAndExit() {
+        viewModelScope.launch {
+            //TODO: save stuff
+            _effectStream.emit(EditPageEffect.NavigateToListPage)
+        }
+    }
+
+    private fun handleIgnoreAndExit() {
+        viewModelScope.launch {
+            _effectStream.emit(EditPageEffect.NavigateToListPage)
+        }
     }
 
     private fun handleInitWithTask(taskId: String) {
@@ -50,9 +67,11 @@ constructor(
     private val _nameDisplay = MutableStateFlow("")
     private val _isImportant = MutableStateFlow(false)
     private val _pageTitle = MutableStateFlow(TITLE_NEW_PAGE)
+    private val _effectStream = MutableSharedFlow<EditPageEffect>()
 
     // UI State (public)
     val nameDisplay: StateFlow<String> = _nameDisplay
     val isImportant: StateFlow<Boolean> = _isImportant
     val pageTitle: StateFlow<String> = _pageTitle
+    val effectStream: SharedFlow<EditPageEffect> = _effectStream
 }

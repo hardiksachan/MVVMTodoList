@@ -39,7 +39,7 @@ object NavTargets {
             override val arguments: List<NamedNavArgument>
                 get() = argumentsList
             override val destination: String
-                get() = "$ROUTE_NAME/$KEY_TASK_ID={$taskId}"
+                get() = "$ROUTE_NAME?$KEY_TASK_ID={$taskId}"
 
         }
     }
