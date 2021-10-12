@@ -93,7 +93,10 @@ fun NavigationComponent(
         }
 
         composable(NavTargets.AddEditTask.route) { entry ->
-            val taskId = entry.arguments?.getString(NavTargets.AddEditTask.KEY_TASK_ID)
+            val taskId = entry.arguments
+                ?.getString(NavTargets.AddEditTask.KEY_TASK_ID)
+                ?.drop(1)
+                ?.dropLast(1)
 
             val vm: EditPageViewModel = hiltViewModel()
 

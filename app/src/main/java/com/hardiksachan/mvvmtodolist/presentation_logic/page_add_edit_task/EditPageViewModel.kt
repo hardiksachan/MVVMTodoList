@@ -1,5 +1,6 @@
 package com.hardiksachan.mvvmtodolist.presentation_logic.page_add_edit_task
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hardiksachan.mvvmtodolist.common.IDispatcherProvider
@@ -17,6 +18,8 @@ import javax.inject.Inject
 const val TITLE_NEW_PAGE = "New Task"
 const val TITLE_EDIT_PAGE = "Edit Task"
 
+private const val TAG = "EditPageViewModel"
+
 @HiltViewModel
 class EditPageViewModel
 @Inject
@@ -28,15 +31,35 @@ constructor(
 
     fun onEvent(event: EditPageEvent) = when (event) {
         is EditPageEvent.InitWithTask -> handleInitWithTask(taskId = event.taskId)
-        EditPageEvent.IsImportantToggled -> TODO()
-        is EditPageEvent.NameChanged -> TODO()
+        EditPageEvent.IsImportantToggled -> handleIsImportantToggled()
+        is EditPageEvent.NameChanged -> handleNameChanged(newName = event.newName)
         EditPageEvent.IgnoreAndExit -> handleIgnoreAndExit()
         EditPageEvent.SaveAndExit -> handleSaveAndExit()
     }
 
+    private fun handleNameChanged(newName: String) {
+        viewModelScope.launch {
+            _nameDisplay.emit(newName)
+        }
+    }
+
+    private fun handleIsImportantToggled() {
+        viewModelScope.launch {
+            _isImportant.emit(_isImportant.value.not())
+        }
+    }
+
     private fun handleSaveAndExit() {
         viewModelScope.launch {
-            //TODO: save stuff
+            taskRepository.saveTask(
+                editingTask?.copy(
+                    name = _nameDisplay.value,
+                    important = _isImportant.value
+                ) ?: Task(
+                    name = _nameDisplay.value,
+                    important = _isImportant.value
+                )
+            )
             _effectStream.emit(EditPageEffect.NavigateToListPage)
         }
     }
@@ -50,7 +73,11 @@ constructor(
     private fun handleInitWithTask(taskId: String) {
         viewModelScope.launch {
             when (val taskWrapper = taskRepository.getTaskWithId(taskId)) {
-                is ResultWrapper.Failure -> TODO()
+                is ResultWrapper.Failure -> {
+                    // TODO: handle Error Case
+                    Log.e(TAG, "handleInitWithTask: failed to load task with id: $taskId")
+                    Log.e(TAG, "handleInitWithTask: ${taskWrapper.error}", )
+                }
                 is ResultWrapper.Success -> {
                     editingTask = taskWrapper.result
                     editingTask?.also {
