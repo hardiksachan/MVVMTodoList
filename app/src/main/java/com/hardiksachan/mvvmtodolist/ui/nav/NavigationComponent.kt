@@ -33,7 +33,9 @@ fun NavigationComponent(
 ) {
     LaunchedEffect("navigation") {
         navigator.pageStream.onEach {
-            navController.navigate(it.destination)
+            navController.navigate(it.destination) {
+                launchSingleTop = true
+            }
         }.launchIn(this)
     }
 
@@ -107,7 +109,8 @@ fun NavigationComponent(
 
                 vm.effectStream.onEach {
                     when (it) {
-                        EditPageEffect.NavigateToListPage -> navigator.navigateTo(NavTargets.viewTasks)
+                        EditPageEffect.NavigateToListPage ->
+                            navigator.navigateTo(NavTargets.viewTasks)
                     }
                 }.launchIn(this)
             }
