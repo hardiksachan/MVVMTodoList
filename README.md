@@ -13,6 +13,10 @@ I am creating this project to teach myself about SQLDelight, Dependency Injectio
 > NOTE: I'll be recreating Coding In Flow's [tutorial application](https://www.youtube.com/playlist?list=PLrnPJCHvNZuCfAe7QK2BoMPkv2TGM_b0E),
 > with some changes in tech stack.
 
+## 📷 Screenshots 
+
+![](./img/showcase.png)
+
 ## Author
 
 **Hardik Sachan**
