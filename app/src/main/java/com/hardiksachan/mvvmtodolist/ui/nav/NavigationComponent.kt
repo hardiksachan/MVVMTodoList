@@ -20,6 +20,7 @@ import com.hardiksachan.mvvmtodolist.presentation_logic.page_view_tasks.TasksVie
 import com.hardiksachan.mvvmtodolist.ui.page_add_edit_task.AddEditTaskPage
 import com.hardiksachan.mvvmtodolist.ui.page_view_tasks.TasksPage
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -58,7 +59,7 @@ fun NavigationComponent(
             val snackbarHostState = remember { SnackbarHostState() }
 
             LaunchedEffect(Unit) {
-                vm.effectStream.onEach {
+                vm.effectStream.collectLatest {
                     when (it) {
                         is TasksPageEffect.ShowUndoDeleteTaskMessage -> {
                             val snackbarResult = snackbarHostState.showSnackbar(
@@ -80,7 +81,7 @@ fun NavigationComponent(
                             )
                         )
                     }
-                }.launchIn(this)
+                }
             }
 
             TasksPage(
@@ -107,12 +108,12 @@ fun NavigationComponent(
                     vm.onEvent(EditPageEvent.InitWithTask(it))
                 }
 
-                vm.effectStream.onEach {
+                vm.effectStream.collectLatest {
                     when (it) {
                         EditPageEffect.NavigateToListPage ->
                             navigator.navigateTo(NavTargets.viewTasks)
                     }
-                }.launchIn(this)
+                }
             }
 
             val appBarTitle = vm.pageTitle.collectAsState()
